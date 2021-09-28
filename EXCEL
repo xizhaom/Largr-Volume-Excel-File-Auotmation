@@ -1,0 +1,22 @@
+new_df = pd.DataFrame()
+for file in files:
+    print(file)
+    if file.endswith('.xlsx'):
+        xls = pd.read_excel(file, sheet_name = None)
+        sheet_name_list = []
+        for key in xls.keys():
+            sheet_name_list.append(key)
+        for sheet in sheet_name_list:
+            if 'Forms' in sheet:        
+                sheet_name = sheet
+        df = pd.read_excel(file, sheet_name=sheet_name)
+        df.drop([0,1,2,3],axis="index")
+        df.columns = df.iloc[4]
+        df = df[5:]
+        df = df[['State','Locality','Level','Exemption Type','FORM ID','Form Title','Number','Form Comments']]
+        df.reset_index(drop=True, inplace=True)
+        df
+        new_df = new_df.append(df, ignore_index=True)
+new_df.head(100)
+
+new_df.to_excel('GMG Output.xlsx')
